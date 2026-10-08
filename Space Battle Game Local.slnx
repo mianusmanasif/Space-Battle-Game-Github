@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="Space Battle Game Local/Space Battle Game Local.vcxproj" />
+  <Project Path="Space Battle Game Local/Space Battle Game Local.vcxproj" Id="a6f79bdd-5a67-48ed-a41c-d6333cbec732" />
 </Solution>
