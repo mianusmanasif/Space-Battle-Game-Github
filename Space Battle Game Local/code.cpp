@@ -8,7 +8,7 @@ using namespace std;
 
 int main()
 {
-    const int width = 860, height = 800;
+    const int width = 1920, height = 1080;
     sf::RenderWindow window; // Using the window class to define our window object
     window.create(sf::VideoMode({ width, height }), "Space Battle Game", sf::Style::Default); // Creates the window and takes 3 parametres: 1.VideoMode which is a fucntion defines the size 2.Name of window 3. Style which is buttons
 
