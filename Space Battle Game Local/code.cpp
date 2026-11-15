@@ -8,10 +8,16 @@ using namespace std;
 
 int main()
 {
-    const int width = 860, height = 1000;
+    const int width = 860, height = 800;
     sf::RenderWindow window; // Using the window class to define our window object
     window.create(sf::VideoMode({ width, height }), "Space Battle Game", sf::Style::Default); // Creates the window and takes 3 parametres: 1.VideoMode which is a fucntion defines the size 2.Name of window 3. Style which is buttons
    
+    Texture texture;
+    texture.loadFromFile("space1.JPG"); // we use texture from loaded file 
+
+    Sprite background(texture);
+    background.setTexture(texture); // we set texture(image that we loaded) as background
+
     window.setFramerateLimit(30);
     //Creating Player
     Texture playerTexture;
@@ -163,6 +169,7 @@ int main()
         }
 
         window.clear();
+        window.draw(background);
         window.draw(player);
         for (int i = 0; i < monsters.size(); i++)
         {
