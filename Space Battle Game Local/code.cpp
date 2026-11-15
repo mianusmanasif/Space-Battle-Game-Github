@@ -6,7 +6,7 @@
 using namespace sf;
 using namespace std;
 
-void StartGame()
+int main()
 {
     const int width = 1920, height = 1080;
     sf::RenderWindow window; // Using the window class to define our window object
