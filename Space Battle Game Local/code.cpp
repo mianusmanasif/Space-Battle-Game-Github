@@ -64,7 +64,7 @@ int main()
     scoreText.setPosition({ 20.0f, 20.0f });
     scoreText.setString("Score: 0");
 
-	// GAME OVER
+    // GAME OVER
     bool isGameOver = false;
 
     Text gameOverText(font);
@@ -85,7 +85,7 @@ int main()
         // Time of each Frame
         Time timeSinceLastFrame = clock.restart();
 
-		// FREEZE GAME WHEN GAME OVER
+        // FREEZE GAME WHEN GAME OVER
         if (!isGameOver)
         {
             //Monsters
@@ -113,7 +113,8 @@ int main()
             //Bullets;
             if (Mouse::isButtonPressed(Mouse::Button::Left) && !mousePressed)
             {
-                bullet.setPosition({ player.getPosition().x + 32 , player.getPosition().y });
+                bullet.setPosition({ player.getPosition().x + (player.getGlobalBounds().size.x / 2.0f) - (bullet.getGlobalBounds().size.x / 2.0f), player.getPosition().y });
+
                 bullets.push_back(bullet);
                 mousePressed = true;
             }
