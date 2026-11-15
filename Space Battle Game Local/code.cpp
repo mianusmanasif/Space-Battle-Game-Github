@@ -6,14 +6,14 @@
 using namespace sf;
 using namespace std;
 
-int main()
+void StartGame()
 {
     const int width = 1920, height = 1080;
     sf::RenderWindow window; // Using the window class to define our window object
     window.create(sf::VideoMode({ width, height }), "Space Battle Game", sf::Style::Default); // Creates the window and takes 3 parametres: 1.VideoMode which is a fucntion defines the size 2.Name of window 3. Style which is buttons
 
     Texture texture;
-    texture.loadFromFile("Texture/space1.JPG"); // we use texture from loaded file 
+    texture.loadFromFile("Texture/space1.JPG"); // we use texture from loaded file
 
     Sprite background(texture);
     background.setTexture(texture); // we set texture(image that we loaded) as background
@@ -136,7 +136,7 @@ int main()
             Vector2f vRequestedPlayerMovement(0.0f, 0.0f);
             float fSpeed = 350.0f; //Use to adjust speed of Spaceship
 
-            //Gather player's input 
+            //Gather player's input
             if (Keyboard::isKeyPressed(Keyboard::Key::W)) {
                 vRequestedPlayerMovement += Vector2f(0.0f, -1.0f);
             }
@@ -209,7 +209,7 @@ int main()
                 scoreText.setString("Score: " + to_string(score));
             }
 
-            // Player-Enemy Touch Check 
+            // Player-Enemy Touch Check
             for (size_t j = 0; j < monsters.size(); j++)
             {
                 if (player.getGlobalBounds().findIntersection(monsters[j].getGlobalBounds()))
@@ -239,7 +239,7 @@ int main()
             window.draw(scoreText);
         }
 
-        // Draw Game Over Text 
+        // Draw Game Over Text
         if (fontLoaded && isGameOver)
         {
             window.draw(gameOverText);
