@@ -10,28 +10,28 @@ int main() {
     RectangleShape background;
     background.setSize(Vector2f(1920,1080));
     Texture MainTexture;
-    MainTexture.loadFromFile("Texture/gamephoto.jpg");
+    MainTexture.loadFromFile("Texture/space1.jpg");
     background.setTexture(&MainTexture);
 
     //Photo to the game
     RectangleShape Pbackground;
     Pbackground.setSize(Vector2f(1920,1080));
     Texture back_texture;
-    back_texture.loadFromFile("Texture/gamephoto.jpg");
+    back_texture.loadFromFile("Texture/space1.jpg");
     Pbackground.setTexture(&back_texture);
 
     //photo to option
     RectangleShape Obackground;
     Obackground.setSize(Vector2f(1920,1080));
     Texture Optiontexture;
-    Optiontexture.loadFromFile("Texture/gamephoto.jpg");
+    Optiontexture.loadFromFile("Texture/space1.jpg");
     Obackground.setTexture(&Optiontexture);
 
     //About our Projects
     RectangleShape ABbackground;
     ABbackground.setSize(Vector2f(1920,1080));
     Texture About_texture;
-    About_texture.loadFromFile("Texture/gamephoto.jpg");
+    About_texture.loadFromFile("Texture/space1.jpg");
     ABbackground.setTexture(&About_texture);
 
     while (MENU.isOpen()) {

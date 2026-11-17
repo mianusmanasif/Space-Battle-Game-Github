@@ -1,4 +1,5 @@
 #include <SFML\Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
 #include <vector>
 #include <cstdlib>
@@ -74,6 +75,20 @@ void StartGame()
     gameOverText.setString("GAME OVER");
     gameOverText.setPosition({ width / 2.0f - 210.0f, height / 2.0f - 50.0f });
 
+    // Sounds
+    SoundBuffer laserbuffer;
+    laserbuffer.loadFromFile("Sounds/laser.mp3");
+    Sound lasersound(laserbuffer);
+
+    SoundBuffer hitbuffer;
+    hitbuffer.loadFromFile("Sounds/hit.wav");
+    Sound hitsound(hitbuffer);
+
+    SoundBuffer gameoverbuffer;
+    gameoverbuffer.loadFromFile("Sounds/gameover.wav");
+    Sound gameoversound(gameoverbuffer);
+
+
     while (window.isOpen()) // Keeps the Program running
     {
         while (const std::optional event = window.pollEvent()) //Look for events
@@ -119,6 +134,9 @@ void StartGame()
 
                 bullets.push_back(bullet);
                 mousePressed = true;
+
+
+                lasersound.play();
             }
             if (!Mouse::isButtonPressed(Mouse::Button::Left))
             {
@@ -187,6 +205,7 @@ void StartGame()
                         monsters.erase(monsters.begin() + j);
                         bulletHit = true;
                         enemyDestroyed = true;
+                        hitsound.play();
                         break;
                     }
                     else
@@ -217,6 +236,7 @@ void StartGame()
                 if (player.getGlobalBounds().findIntersection(monsters[j].getGlobalBounds()))
                 {
                     isGameOver = true;
+                    gameoversound.play();
                     break;
                 }
             }
@@ -245,8 +265,8 @@ void StartGame()
         if (fontLoaded && isGameOver)
         {
             window.draw(gameOverText);
+            
         }
-
         window.display();
     }
 }
