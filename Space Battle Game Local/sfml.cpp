@@ -120,4 +120,5 @@ int main() {
         mainMenu.draw(MENU);
         MENU.display();
     }
+    return 0;
 }

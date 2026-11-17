@@ -5,6 +5,7 @@
 #include<string>
 using namespace sf;
 using namespace std;
+int main();
 
 void StartGame()
 {
@@ -80,6 +81,7 @@ void StartGame()
             if (event->is<sf::Event::Closed>())
             {
                 window.close(); // Close the Window
+                main();
             }
         }
         // Time of each Frame
