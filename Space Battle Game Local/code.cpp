@@ -6,7 +6,7 @@
 using namespace sf;
 using namespace std;
 
-int main()
+void StartGame()
 {
     const int width = 1920, height = 1080;
     sf::RenderWindow window; // Using the window class to define our window object
@@ -25,7 +25,7 @@ int main()
     playerTexture.loadFromFile("Texture/Spaceship.png");
 
     Sprite player(playerTexture);
-    player.setScale(Vector2f(0.2, 0.2));
+    player.setScale(Vector2f(0.15, 0.15));
     player.setPosition(Vector2f(width / 2, height / 1.4));
 
     Clock clock;
@@ -134,7 +134,7 @@ int main()
 
             //Spaceship
             Vector2f vRequestedPlayerMovement(0.0f, 0.0f);
-            float fSpeed = 350.0f; //Use to adjust speed of Spaceship
+            float fSpeed = 400.0f; //Use to adjust speed of Spaceship
 
             //Gather player's input
             if (Keyboard::isKeyPressed(Keyboard::Key::W)) {
