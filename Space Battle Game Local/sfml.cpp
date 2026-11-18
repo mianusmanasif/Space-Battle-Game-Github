@@ -5,33 +5,33 @@ using namespace sf;
 int main() {
     //Make a main window
     RenderWindow MENU(VideoMode({1920,1080}),"Main Menu",Style::Default);
-    MainMenu mainMenu(MENU.getSize().x,MENU.getSize().y);
+    initializeMainMenu(MENU.getSize().x,MENU.getSize().y);
     //set background
     RectangleShape background;
     background.setSize(Vector2f(1920,1080));
     Texture MainTexture;
-    MainTexture.loadFromFile("Texture/space1.jpg");
+    MainTexture.loadFromFile("Texture/gamephoto.jpg");
     background.setTexture(&MainTexture);
 
     //Photo to the game
     RectangleShape Pbackground;
     Pbackground.setSize(Vector2f(1920,1080));
     Texture back_texture;
-    back_texture.loadFromFile("Texture/space1.jpg");
+    back_texture.loadFromFile("Texture/gamephoto.jpg");
     Pbackground.setTexture(&back_texture);
 
     //photo to option
     RectangleShape Obackground;
     Obackground.setSize(Vector2f(1920,1080));
     Texture Optiontexture;
-    Optiontexture.loadFromFile("Texture/space1.jpg");
+    Optiontexture.loadFromFile("Texture/gamephoto.jpg");
     Obackground.setTexture(&Optiontexture);
 
     //About our Projects
     RectangleShape ABbackground;
     ABbackground.setSize(Vector2f(1920,1080));
     Texture About_texture;
-    About_texture.loadFromFile("Texture/space1.jpg");
+    About_texture.loadFromFile("Texture/gamephoto.jpg");
     ABbackground.setTexture(&About_texture);
 
     while (MENU.isOpen()) {
@@ -44,27 +44,27 @@ int main() {
             // KEYBOARD INPUT
             if (const auto* key = event->getIf<Event::KeyReleased>()) {
                 if (key->code == Keyboard::Key::Up) {
-                    mainMenu.MoveUp();
+                    MoveUp();
                 }
                 if (key->code == Keyboard::Key::Down) {
-                    mainMenu.MoveDown();
+                    MoveDown();
                 }
                 if (key->code == Keyboard::Key::Enter) {
-                    x = mainMenu.MainMenuPressed();
+                    x = MainMenuPressed();
                 }
             }
 
             // MOUSE HOVERING
             if (const auto* mouse = event->getIf<Event::MouseMoved>()) {
                 Vector2f mousePos = MENU.mapPixelToCoords(mouse->position);
-                mainMenu.updateMousePosition(mousePos);
+                updateMousePosition(mousePos);
             }
 
             // MOUSE CLICKING
             if (const auto* mouse = event->getIf<Event::MouseButtonPressed>()) {
                 if (mouse->button == Mouse::Button::Left) {
                     Vector2f mousePos = MENU.mapPixelToCoords(mouse->position);
-                    x = mainMenu.getClickedItem(mousePos);
+                    x = getClickedItem(mousePos);
                 }
             }
 
@@ -73,12 +73,13 @@ int main() {
                 RenderWindow ABOUT(VideoMode({1920,1080}), "ABOUT");
                 if (x == 0) {
                     MENU.close();
+                    ABOUT.close();
                     StartGame();
                 }
                 if (x == 1) {
 
                     Font font;
-                    font.openFromFile("Font/Orbitron.ttf");
+                    font.openFromFile("Font/8514sys.ttf");
 
                     Text aboutText(font);
                     aboutText.setString("Made by Usman, Sami and Arif");
@@ -117,8 +118,7 @@ int main() {
             }
         }
         MENU.clear();
-        mainMenu.draw(MENU);
+        draw(MENU);
         MENU.display();
     }
-    return 0;
 }
