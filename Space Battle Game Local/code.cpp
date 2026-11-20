@@ -296,6 +296,7 @@ void StartGame()
 
             // Enemy Destroy N Score Count
             bool enemyDestroyed = false;
+            bool enemy2Destroyed=false;
 
             for (int i = 0; i < bulletCount; )
             {
@@ -328,7 +329,7 @@ void StartGame()
                         if (--monster2HP[j] <= 0)
                         {
                             removeMonster2(j);
-                            enemyDestroyed = true;
+                            enemy2Destroyed = true;
                             hitsound.play();
                         }
                         break;
@@ -344,6 +345,12 @@ void StartGame()
                 score += 10;
                 scoreText.setString("Score: " + to_string(score));
             }
+            if (enemy2Destroyed == true)
+            {
+                score += 15;
+                scoreText.setString("Score: " + to_string(score));
+            }
+
 
             // Player-Enemy Touch Check
             for (int j = 0; j < monsterCount; j++)
