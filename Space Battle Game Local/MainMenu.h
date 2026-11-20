@@ -18,3 +18,9 @@ void MoveDown();
 void updateMousePosition(Vector2f mousePos);
 int getClickedItem(Vector2f mousePos);
 int MainMenuPressed();
+
+void initializeGameOver(float width, float height);
+void drawGameOverOptions(RenderWindow& window);
+void updateGameOverMousePosition(Vector2f mousePos);
+int getClickedGameOverOption(Vector2f mousePos);
+int GameOverOptionsPressed();
