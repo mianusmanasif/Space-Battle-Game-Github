@@ -79,6 +79,12 @@ void StartGame()
     scoreText.setPosition({ 20.0f, 20.0f });
     scoreText.setString("Score: 0");
 
+	// RESTART BUTTON
+    sf::Text restartText(font, "START AGAIN", 28);
+    restartText.setFillColor(sf::Color::White);
+    restartText.setPosition({ 352.f, 574.f });
+
+
     // GAME OVER
     bool isGameOver = false;
 
@@ -110,8 +116,45 @@ void StartGame()
             {
                 window.close(); // Close the Window
                 main();
+            }        while (const std::optional event = window.pollEvent()) //Look for events
+            {
+                if (event->is<sf::Event::Closed>())
+                {
+                    window.close(); // Close the Window
+                    main();
+                }
+
+                if (isGameOver)
+                {
+                    if (const auto* mouseBtn = event->getIf<sf::Event::MouseButtonPressed>())
+                    {
+                        if (mouseBtn->button == sf::Mouse::Button::Left)
+                        {
+                            sf::Vector2f mousePos = window.mapPixelToCoords(mouseBtn->position);
+
+                            if (restartText.getGlobalBounds().contains(mousePos))
+                            {
+                                isGameOver = false;
+                                score = 0;
+                                scoreText.setString("Score: 0");
+
+                                player.setPosition(Vector2f(width / 2.0f, height / 1.4f));
+                                monsspawntimer = 0;
+                                monsspawntimer2 = 0;
+
+                                monsters.clear();
+                                monsters2.clear();
+                                monsters2HP.clear();
+                                bullets.clear();
+                            }
+                        }
+                    }
+                }
+
             }
+
         }
+
         // Time of each Frame
         Time timeSinceLastFrame = clock.restart();
 
@@ -323,6 +366,7 @@ void StartGame()
             }
 
         }
+
         // GAME OVER
         window.clear();
         window.draw(background);
@@ -352,6 +396,12 @@ void StartGame()
             window.draw(gameOverText);
 
         }
+		// Draw Restart Button
+        if (isGameOver)
+        {
+            window.draw(restartText);
+        }
+       
         window.display();
     }
 }
