@@ -10,10 +10,10 @@ int main();
 
 void StartGame()
 {
-    const int width = 1920, height = 1080;
+    const int width = 920, height = 1000;
     sf::RenderWindow window; // Using the window class to define our window object
     window.create(sf::VideoMode({ width, height }), "Space Battle Game", sf::Style::Default); // Creates the window and takes 3 parametres: 1.VideoMode which is a fucntion defines the size 2.Name of window 3. Style which is buttons
-
+    window.setPosition({ 500,0 });
     Texture texture;
     texture.loadFromFile("Texture/space1.JPG"); // we use texture from loaded file
 
@@ -27,12 +27,12 @@ void StartGame()
     playerTexture.loadFromFile("Texture/Spaceship.png");
 
     Sprite player(playerTexture);
-    player.setScale(Vector2f(0.15, 0.15));
+    player.setScale(Vector2f(0.12, 0.12));
     player.setPosition(Vector2f(width / 2, height / 1.4));
 
     Clock clock;
 
-    //Creating Monster
+    //Creating Monsters
     Texture monsterTexture;
     monsterTexture.loadFromFile("Texture/Monster.png");
 
@@ -42,7 +42,17 @@ void StartGame()
     vector<Sprite> monsters;
     monsters.push_back(Sprite(monster));
 
+    Texture monster2texture;
+    monster2texture.loadFromFile("Texture/Monster2.png");
+
+    Sprite monster2(monster2texture);
+    monster2.setScale(Vector2f(0.1, 0.1));
+
+    vector<Sprite> monsters2;
+    monsters2.push_back(Sprite(monster2));
+
     int monsspawntimer = 0;
+    int monsspawntimer2 = 0;
 
     // Creating bullet
     Texture bulletTexture;
@@ -54,7 +64,7 @@ void StartGame()
     vector<Sprite> bullets;
 
     bool mousePressed = false;
-
+    bool spacePressed = false;
     // Score & Font Setup
     int score = 0;
     Font font;
@@ -106,13 +116,34 @@ void StartGame()
         if (!isGameOver)
         {
             //Monsters
+           
+            if (monsspawntimer2 < 100)
+            {
+                monsspawntimer2++;
+            }
+            if (monsspawntimer2 >= 100)
+            {
+                monster2.setPosition({ float(rand() % (width - 60) - int(monster2.getScale().x) +30), 0 });
+                monsters2.push_back(monster2);
+
+                monsspawntimer2 = 0;
+            }
+            for (int i = 0; i < monsters2.size(); i++)
+            {
+                monsters2[i].move(Vector2f(0, 300) * timeSinceLastFrame.asSeconds());
+
+                if (monsters2[i].getPosition().y > height)
+                {
+                    monsters2.erase(monsters2.begin() + i);
+                }
+            }
             if (monsspawntimer < 30)
             {
                 monsspawntimer++;
             }
             if (monsspawntimer >= 30)
             {
-                monster.setPosition({ float(rand() % width - int(monster.getScale().x)), 0 });
+                monster.setPosition({ float(rand() % (width - 60) - int(monster.getScale().x) + 30), 0 });
                 monsters.push_back(monster);
 
                 monsspawntimer = 0;
@@ -128,19 +159,23 @@ void StartGame()
             }
 
             //Bullets;
-            if (Mouse::isButtonPressed(Mouse::Button::Left) && !mousePressed)
+            if ((Mouse::isButtonPressed(Mouse::Button::Left) && !mousePressed) ||(Keyboard::isKeyPressed(Keyboard::Key::Space) && !spacePressed))
             {
                 bullet.setPosition({ player.getPosition().x + (player.getGlobalBounds().size.x / 2.0f) - (bullet.getGlobalBounds().size.x / 2.0f), player.getPosition().y });
-
                 bullets.push_back(bullet);
-                mousePressed = true;
 
+                mousePressed = true;
+                spacePressed = true;
 
                 lasersound.play();
             }
             if (!Mouse::isButtonPressed(Mouse::Button::Left))
             {
                 mousePressed = false;
+            }
+            if (!Keyboard::isKeyPressed(Keyboard::Key::Space))
+            {
+                spacePressed = false;
             }
             for (int i = 0; i < bullets.size(); i++)
             {
@@ -186,9 +221,9 @@ void StartGame()
             {
                 player.setPosition({ width - boundingBox.size.x, player.getPosition().y });
             }
-            if (player.getPosition().y + boundingBox.size.y > height)
+            if (player.getPosition().y + boundingBox.size.y > height -80)
             {
-                player.setPosition({ player.getPosition().x,height - boundingBox.size.y });
+                player.setPosition({ player.getPosition().x,height - 80 - boundingBox.size.y });
             }
 
             // Enemy Destroy N Score Count
@@ -203,6 +238,36 @@ void StartGame()
                     if (const optional intersection = bullets[i].getGlobalBounds().findIntersection(monsters[j].getGlobalBounds()))
                     {
                         monsters.erase(monsters.begin() + j);
+                        bulletHit = true;
+                        enemyDestroyed = true;
+                        hitsound.play();
+                        break;
+                    }
+                    else
+                    {
+                        j++;
+                    }
+                }
+
+                if (bulletHit)
+                {
+                    bullets.erase(bullets.begin() + i);
+                }
+                else
+                {
+                    i++;
+                }
+            }
+
+            for (size_t i = 0; i < bullets.size(); )
+            {
+                bool bulletHit = false;
+
+                for (size_t j = 0; j < monsters2.size(); )
+                {
+                    if (const optional intersection = bullets[i].getGlobalBounds().findIntersection(monsters2[j].getGlobalBounds()))
+                    {
+                        monsters2.erase(monsters2.begin() + j);
                         bulletHit = true;
                         enemyDestroyed = true;
                         hitsound.play();
@@ -240,6 +305,15 @@ void StartGame()
                     break;
                 }
             }
+            for (size_t j = 0; j < monsters2.size(); j++)
+            {
+                if (player.getGlobalBounds().findIntersection(monsters2[j].getGlobalBounds()))
+                {
+                    isGameOver = true;
+                    gameoversound.play();
+                    break;
+                }
+            }
 
         }
         // GAME OVER
@@ -249,6 +323,10 @@ void StartGame()
         for (int i = 0; i < monsters.size(); i++)
         {
             window.draw(monsters[i]);
+        }
+        for (int i = 0; i < monsters2.size(); i++)
+        {
+            window.draw(monsters2[i]);
         }
         for (int i = 0; i < bullets.size(); i++)
         {
