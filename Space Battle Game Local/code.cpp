@@ -49,7 +49,10 @@ void StartGame()
     monster2.setScale(Vector2f(0.1, 0.1));
 
     vector<Sprite> monsters2;
+    vector<int> monsters2HP;
     monsters2.push_back(Sprite(monster2));
+    monsters2HP.push_back(2);
+
 
     int monsspawntimer = 0;
     int monsspawntimer2 = 0;
@@ -116,7 +119,7 @@ void StartGame()
         if (!isGameOver)
         {
             //Monsters
-           
+
             if (monsspawntimer2 < 100)
             {
                 monsspawntimer2++;
@@ -125,6 +128,7 @@ void StartGame()
             {
                 monster2.setPosition({ float(rand() % (width - 60) - int(monster2.getScale().x) +30), 0 });
                 monsters2.push_back(monster2);
+                monsters2HP.push_back(2);
 
                 monsspawntimer2 = 0;
             }
@@ -135,6 +139,7 @@ void StartGame()
                 if (monsters2[i].getPosition().y > height)
                 {
                     monsters2.erase(monsters2.begin() + i);
+                    monsters2HP.erase(monsters2HP.begin()+i);
                 }
             }
             if (monsspawntimer < 30)
@@ -228,7 +233,6 @@ void StartGame()
 
             // Enemy Destroy N Score Count
             bool enemyDestroyed = false;
-
             for (size_t i = 0; i < bullets.size(); )
             {
                 bool bulletHit = false;
@@ -258,19 +262,22 @@ void StartGame()
                     i++;
                 }
             }
-
             for (size_t i = 0; i < bullets.size(); )
             {
                 bool bulletHit = false;
-
                 for (size_t j = 0; j < monsters2.size(); )
                 {
-                    if (const optional intersection = bullets[i].getGlobalBounds().findIntersection(monsters2[j].getGlobalBounds()))
+                    if (bullets[i].getGlobalBounds().findIntersection(monsters2[j].getGlobalBounds()))
                     {
-                        monsters2.erase(monsters2.begin() + j);
                         bulletHit = true;
-                        enemyDestroyed = true;
-                        hitsound.play();
+                        monsters2HP[j]--;
+                        if (monsters2HP[j]<=0) {
+                            monsters2.erase(monsters2.begin() + j);
+                            monsters2HP.erase(monsters2HP.begin()+j);
+                            enemyDestroyed = true;
+                            hitsound.play();
+
+                        }
                         break;
                     }
                     else
@@ -343,7 +350,7 @@ void StartGame()
         if (fontLoaded && isGameOver)
         {
             window.draw(gameOverText);
-            
+
         }
         window.display();
     }
