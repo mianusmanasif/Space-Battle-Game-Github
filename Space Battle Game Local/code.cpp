@@ -134,7 +134,11 @@ void StartGame()
     gameoverbuffer.loadFromFile("Sounds/gameover.wav");
     Sound gameoversound(gameoverbuffer);
 
+    Music music;
+    music.openFromFile("Sounds/Nach Punjaban - Abrar Ul Haq.mp3");
 
+    music.play();
+    music.setLooping(true);
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -212,7 +216,7 @@ void StartGame()
             {
                 if (monsterCount < MAX_MONSTERS)
                 {
-                    monsterPos[monsterCount] = { float(rand() % (width - 60) - int(monster.getScale().x) + 30), 0.f };
+                    monsterPos[monsterCount] = { float(rand() % (width - 110) - int(monster.getScale().x) + 30), 0.f };
                     monsterCount++;
                 }
                 monsspawntimer = 0;
@@ -403,6 +407,7 @@ void StartGame()
         if (fontLoaded && isGameOver)
         {
             window.draw(gameOverText);
+            music.pause();
             drawGameOverOptions(window);
         }
         window.display();
