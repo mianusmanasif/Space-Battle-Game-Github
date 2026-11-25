@@ -67,6 +67,7 @@ void StartGame()
 
     Vector2f bulletPos[MAX_BULLETS];
     int bulletCount = 0;
+    int bullettimer = 0;
 
     // initial monsters (same as your original push_backs, at the sprites' starting position)
     monsterPos[monsterCount++] = monster.getPosition();
@@ -238,18 +239,21 @@ void StartGame()
             }
 
             //Bullets
+            bullettimer++;
             if ((Mouse::isButtonPressed(Mouse::Button::Left) && !mousePressed) || (Keyboard::isKeyPressed(Keyboard::Key::Space) && !spacePressed))
             {
-                if (bulletCount < MAX_BULLETS)
+                if (bulletCount < MAX_BULLETS && bullettimer > 15)
                 {
                     bulletPos[bulletCount] = { player.getPosition().x + (player.getGlobalBounds().size.x / 2.0f) - (bullet.getGlobalBounds().size.x / 2.0f), player.getPosition().y };
                     bulletCount++;
+                    bullettimer = 0;
+                    lasersound.play();
                 }
-
+           
                 mousePressed = true;
                 spacePressed = true;
 
-                lasersound.play();
+                
             }
             if (!Mouse::isButtonPressed(Mouse::Button::Left))
             {
