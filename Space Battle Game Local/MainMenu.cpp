@@ -55,14 +55,14 @@ void initializeGameOver(float width,float height) {
     GameOverOptions[0].setFont(font);
     GameOverOptions[0].setFillColor(Color::White);
     GameOverOptions[0].setString("Play Again");
-    GameOverOptions[0].setCharacterSize(70);
-    GameOverOptions[0].setPosition({300,550});
+    GameOverOptions[0].setCharacterSize(40);
+    GameOverOptions[0].setPosition({375,550});
     //Exit to Menu
     GameOverOptions[1].setFont(font);
     GameOverOptions[1].setFillColor(Color::White);
     GameOverOptions[1].setString("Exit to Menu");
-    GameOverOptions[1].setCharacterSize(70);
-    GameOverOptions[1].setPosition({275,650});
+    GameOverOptions[1].setCharacterSize(40);
+    GameOverOptions[1].setPosition({360,650});
 
 
 }
