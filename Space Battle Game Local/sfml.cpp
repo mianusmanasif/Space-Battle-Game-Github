@@ -59,7 +59,7 @@ int main() {
                     aboutText.setString("Made by Usman, Sami and Arif");
                     aboutText.setCharacterSize(50);
                     aboutText.setFillColor(Color::Red);
-                    aboutText.setPosition({960, 540});
+                    aboutText.setPosition({460, 450});
                     FloatRect bounds = aboutText.getGlobalBounds();
 
                     aboutText.move({
