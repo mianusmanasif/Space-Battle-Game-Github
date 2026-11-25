@@ -31,21 +31,21 @@ void initializeMainMenu(float width, float height) {
     mainMenu[0].setFillColor(Color::White);
     mainMenu[0].setString("Play");
     mainMenu[0].setCharacterSize(70);
-    mainMenu[0].setPosition({850,400});
+    mainMenu[0].setPosition({width/2 - 70,400});
 
-    //about
+    // about
     mainMenu[1].setFont(font);
     mainMenu[1].setFillColor(Color::White);
     mainMenu[1].setString("About");
     mainMenu[1].setCharacterSize(70);
-    mainMenu[1].setPosition({850,500});
+    mainMenu[1].setPosition({ width / 2 - 70,500});
 
     //exit
     mainMenu[2].setFont(font);
     mainMenu[2].setFillColor(Color::White);
     mainMenu[2].setString("Exit");
     mainMenu[2].setCharacterSize(70);
-    mainMenu[2].setPosition({850,600});
+    mainMenu[2].setPosition({ width / 2 - 70,600});
 }
 
 //Initialize Options to send to Main Menu or to Play Again
