@@ -4,35 +4,9 @@ void StartGame();
 using namespace sf;
 int main() {
     //Make a main window
-    RenderWindow MENU(VideoMode({1920,1080}),"Main Menu",Style::Default);
+    RenderWindow MENU(VideoMode({920,1000}),"Main Menu",Style::Default);
+    MENU.setPosition({ 500,0 });
     initializeMainMenu(MENU.getSize().x,MENU.getSize().y);
-    //set background
-    RectangleShape background;
-    background.setSize(Vector2f(1920,1080));
-    Texture MainTexture;
-    MainTexture.loadFromFile("Texture/gamephoto.jpg");
-    background.setTexture(&MainTexture);
-
-    //Photo to the game
-    RectangleShape Pbackground;
-    Pbackground.setSize(Vector2f(1920,1080));
-    Texture back_texture;
-    back_texture.loadFromFile("Texture/gamephoto.jpg");
-    Pbackground.setTexture(&back_texture);
-
-    //photo to option
-    RectangleShape Obackground;
-    Obackground.setSize(Vector2f(1920,1080));
-    Texture Optiontexture;
-    Optiontexture.loadFromFile("Texture/gamephoto.jpg");
-    Obackground.setTexture(&Optiontexture);
-
-    //About our Projects
-    RectangleShape ABbackground;
-    ABbackground.setSize(Vector2f(1920,1080));
-    Texture About_texture;
-    About_texture.loadFromFile("Texture/gamephoto.jpg");
-    ABbackground.setTexture(&About_texture);
 
     while (MENU.isOpen()) {
         while (const optional event = MENU.pollEvent()) {
@@ -70,7 +44,7 @@ int main() {
 
             // MENU SELECTION
             if (x != -1) {
-                RenderWindow ABOUT(VideoMode({1920,1080}), "ABOUT");
+                RenderWindow ABOUT(VideoMode({920,1000}), "ABOUT");
                 if (x == 0) {
                     MENU.close();
                     ABOUT.close();
