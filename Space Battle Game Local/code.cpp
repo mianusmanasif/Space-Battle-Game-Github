@@ -155,6 +155,7 @@ void StartGame()
             if (event->is<sf::Event::Closed>())
             {
                 window.close();
+                music.stop();
                 main();
             }
             if (event->is<sf::Event::MouseMoved>())
@@ -181,6 +182,7 @@ void StartGame()
                     else if (x == 1)
                     {
                         window.close();
+                        music.stop();
                         main();
                         return;
                     }
