@@ -68,6 +68,14 @@ void StartGame()
 
     bool mousePressed = false;
     bool spacePressed = false;
+
+    // Explosion particles
+    Texture particlesTexture;
+    particlesTexture.loadFromFile("Texture/Particles.png");
+
+    Sprite particles(particlesTexture);
+    particles.setScale(Vector2f(0.05, 0.05));
+
     // Score & Font Setup
     int score = 0;
     Font font;
@@ -162,7 +170,7 @@ void StartGame()
                     monsters.erase(monsters.begin() + i);
                 }
             }
-
+           
             //Bullets;
             if ((Mouse::isButtonPressed(Mouse::Button::Left) && !mousePressed) ||(Keyboard::isKeyPressed(Keyboard::Key::Space) && !spacePressed))
             {
