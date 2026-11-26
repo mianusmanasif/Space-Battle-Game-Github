@@ -1,4 +1,4 @@
-#include <SFML/Graphics.hpp>
+#include <SFML\Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include <cstdlib>
@@ -8,6 +8,54 @@
 using namespace sf;
 using namespace std;
 int main();
+
+const int EXPLOSION_FRAMES = 12;   // how long an explosion stays 
+
+void removeMonster(Vector2f pos[], int& count, int j)
+{
+    pos[j] = pos[count - 1];
+    count--;
+}
+
+void removeMonster2(Vector2f pos[], int hp[], int& count, int j)
+{
+    pos[j] = pos[count - 1];
+    hp[j] = hp[count - 1];
+    count--;
+}
+
+void removeBullet(Vector2f pos[], int& count, int j)
+{
+    pos[j] = pos[count - 1];
+    count--;
+}
+
+void removeExplosion(Vector2f pos[], int timer[], int& count, int j)
+{
+    pos[j] = pos[count - 1];
+    timer[j] = timer[count - 1];
+    count--;
+}
+
+// places a template sprite at a position and returns its bounds
+FloatRect boundsAt(Sprite& s, Vector2f p)
+{
+    s.setPosition(p);
+    return s.getGlobalBounds();
+}
+
+// starts an explosion at the centre of a rectangle
+void spawnExplosion(Vector2f pos[], int timer[], int& count, int maxCount, FloatRect area)
+{
+    if (count < maxCount)
+    {
+        pos[count] = { area.position.x + area.size.x / 2.0f,
+                       area.position.y + area.size.y / 2.0f };
+        timer[count] = EXPLOSION_FRAMES;
+        count++;
+    }
+}
+
 void StartGame()
 {
     const int width = 920, height = 1000;
@@ -32,9 +80,9 @@ void StartGame()
     player.setScale(Vector2f(0.12, 0.12));
     player.setPosition(Vector2f(width / 2, height / 1.4));
 
-    
+    Clock clock;
 
-    //Creating Monsters 
+    //Creating Monsters (template sprites)
     Texture monsterTexture;
     monsterTexture.loadFromFile("Texture/Monster.png");
 
@@ -49,14 +97,14 @@ void StartGame()
     Sprite monster2(monster2texture);
     monster2.setScale(Vector2f(0.1, 0.1));
 
-    // Creating bullet 
+    // Creating bullet (template sprite)
     Texture bulletTexture;
     bulletTexture.loadFromFile("Texture/Bullet.png");
 
     Sprite bullet(bulletTexture);
     bullet.setScale(Vector2f(0.1, 0.05));
 
-    // Arrays store positions, template sprites are used to draw/collide
+    //arrays
     const int MAX_MONSTERS = 50;
     const int MAX_MONSTERS2 = 50;
     const int MAX_BULLETS = 100;
@@ -72,31 +120,18 @@ void StartGame()
     int bulletCount = 0;
     int bullettimer = 0;
 
-    // initial monsters
+    // Explosion
+    const int MAX_EXPLOSIONS = 50;
+    Vector2f explosionPos[MAX_EXPLOSIONS];
+    int explosionTimer[MAX_EXPLOSIONS];
+    int explosionCount = 0;
+
+    // initial monsters 
     monsterPos[monsterCount++] = monster.getPosition();
     monster2Pos[monster2Count] = monster2.getPosition();
     monster2HP[monster2Count] = 2;
     monster2Count++;
 
-    // helpers (swap-remove: copy last element into slot j, shrink count)
-    auto removeMonster = [&](int j) {
-        monsterPos[j] = monsterPos[monsterCount - 1];
-        monsterCount--;
-    };
-    auto removeMonster2 = [&](int j) {
-        monster2Pos[j] = monster2Pos[monster2Count - 1];
-        monster2HP[j] = monster2HP[monster2Count - 1];
-        monster2Count--;
-    };
-    auto removeBullet = [&](int j) {
-        bulletPos[j] = bulletPos[bulletCount - 1];
-        bulletCount--;
-    };
-    // places a template sprite at a position and returns its bounds
-    auto boundsAt = [](Sprite& s, Vector2f p) {
-        s.setPosition(p);
-        return s.getGlobalBounds();
-    };
 
     int monsspawntimer = 0;
     int monsspawntimer2 = 0;
@@ -109,7 +144,8 @@ void StartGame()
     particlesTexture.loadFromFile("Texture/Particles.png");
 
     Sprite particles(particlesTexture);
-    particles.setScale(Vector2f(0.05, 0.05));
+    particles.setOrigin({ particlesTexture.getSize().x / 2.0f, particlesTexture.getSize().y / 2.0f });
+    particles.setScale(Vector2f(0.05, 0.05));   
 
     // Score & Font Setup
     int score = 0;
@@ -127,11 +163,11 @@ void StartGame()
     Text NewHighScore(font);
     NewHighScore.setCharacterSize(40);
     NewHighScore.setFillColor(Color::Red);
-    NewHighScore.setPosition({250.0f,350.0f});
+    NewHighScore.setPosition({ 250.0f,350.0f });
 
     // GAME OVER
     bool isGameOver = false;
-    bool isNewHighScore=false;
+    bool isNewHighScore = false;
 
     Text gameOverText(font);
     gameOverText.setCharacterSize(70);
@@ -157,9 +193,6 @@ void StartGame()
 
     music.play();
     music.setLooping(true);
-
-    Clock clock;
-
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -204,6 +237,14 @@ void StartGame()
         // Time of each Frame
         Time timeSinceLastFrame = clock.restart();
 
+        // Count down explosions 
+        for (int i = 0; i < explosionCount; )
+        {
+            explosionTimer[i]--;
+            if (explosionTimer[i] <= 0) removeExplosion(explosionPos, explosionTimer, explosionCount, i);
+            else i++;
+        }
+
         // FREEZE GAME WHEN GAME OVER
         if (!isGameOver)
         {
@@ -216,7 +257,7 @@ void StartGame()
             {
                 if (monster2Count < MAX_MONSTERS2)
                 {
-                    monster2Pos[monster2Count] = { float(rand() % (width - 60) - int(monster2texture.getSize().x * 0.1f) + 30), 0.f };
+                    monster2Pos[monster2Count] = { float(rand() % (width - 60) - int(monster2.getScale().x) + 30), 0.f };
                     monster2HP[monster2Count] = 2;
                     monster2Count++;
                 }
@@ -226,7 +267,7 @@ void StartGame()
             {
                 monster2Pos[i].y += 300 * timeSinceLastFrame.asSeconds();
 
-                if (monster2Pos[i].y > height) removeMonster2(i);
+                if (monster2Pos[i].y > height) removeMonster2(monster2Pos, monster2HP, monster2Count, i);
                 else i++;
             }
 
@@ -248,13 +289,13 @@ void StartGame()
             {
                 monsterPos[i].y += 200 * timeSinceLastFrame.asSeconds();
 
-                if (monsterPos[i].y > height) removeMonster(i);
+                if (monsterPos[i].y > height) removeMonster(monsterPos, monsterCount, i);
                 else i++;
             }
 
             //Bullets
             bullettimer++;
-            if ((Mouse::isButtonPressed(Mouse::Button::Left)) || (Keyboard::isKeyPressed(Keyboard::Key::Space)))
+            if ((Mouse::isButtonPressed(Mouse::Button::Left) && !mousePressed) || (Keyboard::isKeyPressed(Keyboard::Key::Space) && !spacePressed))
             {
                 if (bulletCount < MAX_BULLETS && bullettimer > 15)
                 {
@@ -264,13 +305,24 @@ void StartGame()
                     lasersound.play();
                 }
 
+                mousePressed = true;
+                spacePressed = true;
+
+
             }
-            
+            if (!Mouse::isButtonPressed(Mouse::Button::Left))
+            {
+                mousePressed = false;
+            }
+            if (!Keyboard::isKeyPressed(Keyboard::Key::Space))
+            {
+                spacePressed = false;
+            }
             for (int i = 0; i < bulletCount; )
             {
                 bulletPos[i].y -= 500 * timeSinceLastFrame.asSeconds();
 
-                if (bulletPos[i].y < 0) removeBullet(i);
+                if (bulletPos[i].y < 0) removeBullet(bulletPos, bulletCount, i);
                 else i++;
             }
 
@@ -315,7 +367,7 @@ void StartGame()
 
             // Enemy Destroy N Score Count
             bool enemyDestroyed = false;
-            bool enemy2Destroyed=false;
+            bool enemy2Destroyed = false;
 
             for (int i = 0; i < bulletCount; )
             {
@@ -325,7 +377,8 @@ void StartGame()
                 {
                     if (boundsAt(bullet, bulletPos[i]).findIntersection(boundsAt(monster, monsterPos[j])))
                     {
-                        removeMonster(j);
+                        spawnExplosion(explosionPos, explosionTimer, explosionCount, MAX_EXPLOSIONS, boundsAt(monster, monsterPos[j]));
+                        removeMonster(monsterPos, monsterCount, j);
                         bulletHit = true;
                         enemyDestroyed = true;
                         hitsound.play();
@@ -333,7 +386,7 @@ void StartGame()
                     }
                 }
 
-                if (bulletHit) removeBullet(i);
+                if (bulletHit) removeBullet(bulletPos, bulletCount, i);
                 else i++;
             }
 
@@ -347,7 +400,8 @@ void StartGame()
                         bulletHit = true;
                         if (--monster2HP[j] <= 0)
                         {
-                            removeMonster2(j);
+                            spawnExplosion(explosionPos, explosionTimer, explosionCount, MAX_EXPLOSIONS, boundsAt(monster2, monster2Pos[j]));
+                            removeMonster2(monster2Pos, monster2HP, monster2Count, j);
                             enemy2Destroyed = true;
                             hitsound.play();
                         }
@@ -355,7 +409,7 @@ void StartGame()
                     }
                 }
 
-                if (bulletHit) removeBullet(i);
+                if (bulletHit) removeBullet(bulletPos, bulletCount, i);
                 else i++;
             }
 
@@ -366,8 +420,8 @@ void StartGame()
             }
             if (enemy2Destroyed == true)
             {
-                score += 20;
-                scoreText.setString("Score: " + to_string(score));
+                score += 15;
+                scoreText.setString("Score: " + to_string(highScore));
             }
 
 
@@ -376,8 +430,12 @@ void StartGame()
             {
                 if (player.getGlobalBounds().findIntersection(boundsAt(monster, monsterPos[j])))
                 {
-                    isGameOver = true;
-                    gameoversound.play();
+                    if (!isGameOver)
+                    {
+                        isGameOver = true;
+                        gameoversound.play();
+                        spawnExplosion(explosionPos, explosionTimer, explosionCount, MAX_EXPLOSIONS, player.getGlobalBounds());
+                    }
                     break;
                 }
             }
@@ -385,8 +443,12 @@ void StartGame()
             {
                 if (player.getGlobalBounds().findIntersection(boundsAt(monster2, monster2Pos[j])))
                 {
-                    isGameOver = true;
-                    gameoversound.play();
+                    if (!isGameOver)
+                    {
+                        isGameOver = true;
+                        gameoversound.play();
+                        spawnExplosion(explosionPos, explosionTimer, explosionCount, MAX_EXPLOSIONS, player.getGlobalBounds());
+                    }
                     break;
                 }
             }
@@ -395,7 +457,7 @@ void StartGame()
         // DRAW
         window.clear();
         window.draw(background);
-        window.draw(player);
+        if (!isGameOver) window.draw(player);
         for (int i = 0; i < monsterCount; i++)
         {
             monster.setPosition(monsterPos[i]);
@@ -412,6 +474,13 @@ void StartGame()
             window.draw(bullet);
         }
 
+        // Draw explosions
+        for (int i = 0; i < explosionCount; i++)
+        {
+            particles.setPosition(explosionPos[i]);
+            window.draw(particles);
+        }
+
         // Draw Score on Screen
         if (fontLoaded)
         {
@@ -423,11 +492,11 @@ void StartGame()
         {
             window.draw(gameOverText);
             music.pause();
-            if (score > highScore){
+            if (score > highScore) {
                 isNewHighScore = true;
             }
             SaveHighScore(score);
-            if (isNewHighScore){
+            if (isNewHighScore) {
                 NewHighScore.setString("NEW HIGH SCORE: " + to_string(score));
                 window.draw(NewHighScore);
             }
