@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include<string>
 #include "MainMenu.h"
+#include "highscore.h"
 using namespace sf;
 using namespace std;
 int main();
@@ -15,6 +16,8 @@ void StartGame()
     window.setPosition({ 500,0 });
     Texture texture;
     texture.loadFromFile("Texture/space1.JPG");
+
+    LoadHighScore();
 
     Sprite background(texture);
     background.setTexture(texture);
@@ -121,8 +124,14 @@ void StartGame()
     scoreText.setPosition({ 20.0f, 20.0f });
     scoreText.setString("Score: 0");
 
+    Text NewHighScore(font);
+    NewHighScore.setCharacterSize(40);
+    NewHighScore.setFillColor(Color::Red);
+    NewHighScore.setPosition({250.0f,350.0f});
+
     // GAME OVER
     bool isGameOver = false;
+    bool isNewHighScore=false;
 
     Text gameOverText(font);
     gameOverText.setCharacterSize(70);
@@ -251,11 +260,11 @@ void StartGame()
                     bullettimer = 0;
                     lasersound.play();
                 }
-           
+
                 mousePressed = true;
                 spacePressed = true;
 
-                
+
             }
             if (!Mouse::isButtonPressed(Mouse::Button::Left))
             {
@@ -366,7 +375,7 @@ void StartGame()
             if (enemy2Destroyed == true)
             {
                 score += 15;
-                scoreText.setString("Score: " + to_string(score));
+                scoreText.setString("Score: " + to_string(highScore));
             }
 
 
@@ -422,6 +431,14 @@ void StartGame()
         {
             window.draw(gameOverText);
             music.pause();
+            if (score > highScore){
+                isNewHighScore = true;
+            }
+            SaveHighScore(score);
+            if (isNewHighScore){
+                NewHighScore.setString("NEW HIGH SCORE: " + to_string(score));
+                window.draw(NewHighScore);
+            }
             drawGameOverOptions(window);
         }
         window.display();
