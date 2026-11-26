@@ -44,14 +44,14 @@ int main() {
 
             // MENU SELECTION
             if (x != -1) {
-                RenderWindow ABOUT(VideoMode({920,1000}), "ABOUT");
+                
                 if (x == 0) {
                     MENU.close();
-                    ABOUT.close();
+                    
                     StartGame();
                 }
                 if (x == 1) {
-
+                    RenderWindow ABOUT(VideoMode({ 920,1000 }), "ABOUT");
                     Font font;
                     font.openFromFile("Font/8514sys.ttf");
 

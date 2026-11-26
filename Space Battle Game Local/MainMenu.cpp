@@ -4,7 +4,7 @@ int MainMenuSelected = 0;
 int GameOverOptionsSelected=0;
 Font font;
 Text mainMenu[Max_main_menu] = {
-    Text(font), Text(font), Text(font), Text(font)
+    Text(font), Text(font), Text(font)
 };
 Text GameOverOptions[2]={Text(font),Text(font)};
 
@@ -27,21 +27,18 @@ void initializeMainMenu(float width, float height) {
     }
 
     //play
-    mainMenu[0].setFont(font);
     mainMenu[0].setFillColor(Color::White);
     mainMenu[0].setString("Play");
     mainMenu[0].setCharacterSize(70);
     mainMenu[0].setPosition({width/2 - 70,400});
 
     // about
-    mainMenu[1].setFont(font);
     mainMenu[1].setFillColor(Color::White);
     mainMenu[1].setString("About");
     mainMenu[1].setCharacterSize(70);
     mainMenu[1].setPosition({ width / 2 - 70,500});
 
     //exit
-    mainMenu[2].setFont(font);
     mainMenu[2].setFillColor(Color::White);
     mainMenu[2].setString("Exit");
     mainMenu[2].setCharacterSize(70);
@@ -50,15 +47,12 @@ void initializeMainMenu(float width, float height) {
 
 //Initialize Options to send to Main Menu or to Play Again
 void initializeGameOver(float width,float height) {
-    font.openFromFile("Font/Orbitron.ttf");
     //Play Again
-    GameOverOptions[0].setFont(font);
     GameOverOptions[0].setFillColor(Color::White);
     GameOverOptions[0].setString("Play Again");
     GameOverOptions[0].setCharacterSize(40);
     GameOverOptions[0].setPosition({375,550});
-    //Exit to Menu
-    GameOverOptions[1].setFont(font);
+    //Exit to Menu;
     GameOverOptions[1].setFillColor(Color::White);
     GameOverOptions[1].setString("Exit to Menu");
     GameOverOptions[1].setCharacterSize(40);
@@ -87,11 +81,12 @@ void MoveUp() {
     if (MainMenuSelected-1>=0) {
         mainMenu[MainMenuSelected].setFillColor(Color::White);
         MainMenuSelected--;
-
-        if (MainMenuSelected==-1) {
-            MainMenuSelected=2;
-        }
-
+        mainMenu[MainMenuSelected].setFillColor(Color::Blue);
+    }
+    else
+    {
+        mainMenu[MainMenuSelected].setFillColor(Color::White);
+        MainMenuSelected = 2;
         mainMenu[MainMenuSelected].setFillColor(Color::Blue);
     }
 }
@@ -102,10 +97,14 @@ void MoveDown() {
         mainMenu[MainMenuSelected].setFillColor(Color::White);
         MainMenuSelected++;
 
-        if (MainMenuSelected==3) {
-            MainMenuSelected=0;
-        }
+     
 
+        mainMenu[MainMenuSelected].setFillColor(Color::Blue);
+    }
+    else
+    {
+        mainMenu[MainMenuSelected].setFillColor(Color::White);
+        MainMenuSelected = 0;
         mainMenu[MainMenuSelected].setFillColor(Color::Blue);
     }
 }
@@ -130,7 +129,7 @@ void updateMousePosition(Vector2f mousePos) {
     for (int i = 0; i < 3; i++) {
         if (mainMenu[i].getGlobalBounds().contains(mousePos)) {
             MainMenuSelected = i;
-            GameOverOptionsSelected=i;
+
             mainMenu[i].setFillColor(Color::Blue);
         }
         else {

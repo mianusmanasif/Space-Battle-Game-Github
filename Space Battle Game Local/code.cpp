@@ -1,4 +1,4 @@
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include <cstdlib>
@@ -32,9 +32,9 @@ void StartGame()
     player.setScale(Vector2f(0.12, 0.12));
     player.setPosition(Vector2f(width / 2, height / 1.4));
 
-    Clock clock;
+    
 
-    //Creating Monsters (template sprites)
+    //Creating Monsters 
     Texture monsterTexture;
     monsterTexture.loadFromFile("Texture/Monster.png");
 
@@ -49,14 +49,14 @@ void StartGame()
     Sprite monster2(monster2texture);
     monster2.setScale(Vector2f(0.1, 0.1));
 
-    // Creating bullet (template sprite)
+    // Creating bullet 
     Texture bulletTexture;
     bulletTexture.loadFromFile("Texture/Bullet.png");
 
     Sprite bullet(bulletTexture);
     bullet.setScale(Vector2f(0.1, 0.05));
 
-    // ---- Static arrays (store positions; template sprites are used to draw/collide) ----
+    // Arrays store positions, template sprites are used to draw/collide
     const int MAX_MONSTERS = 50;
     const int MAX_MONSTERS2 = 50;
     const int MAX_BULLETS = 100;
@@ -72,7 +72,7 @@ void StartGame()
     int bulletCount = 0;
     int bullettimer = 0;
 
-    // initial monsters (same as your original push_backs, at the sprites' starting position)
+    // initial monsters
     monsterPos[monsterCount++] = monster.getPosition();
     monster2Pos[monster2Count] = monster2.getPosition();
     monster2HP[monster2Count] = 2;
@@ -157,6 +157,9 @@ void StartGame()
 
     music.play();
     music.setLooping(true);
+
+    Clock clock;
+
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
@@ -213,7 +216,7 @@ void StartGame()
             {
                 if (monster2Count < MAX_MONSTERS2)
                 {
-                    monster2Pos[monster2Count] = { float(rand() % (width - 60) - int(monster2.getScale().x) + 30), 0.f };
+                    monster2Pos[monster2Count] = { float(rand() % (width - 60) - int(monster2texture.getSize().x * 0.1f) + 30), 0.f };
                     monster2HP[monster2Count] = 2;
                     monster2Count++;
                 }
@@ -251,7 +254,7 @@ void StartGame()
 
             //Bullets
             bullettimer++;
-            if ((Mouse::isButtonPressed(Mouse::Button::Left) && !mousePressed) || (Keyboard::isKeyPressed(Keyboard::Key::Space) && !spacePressed))
+            if ((Mouse::isButtonPressed(Mouse::Button::Left)) || (Keyboard::isKeyPressed(Keyboard::Key::Space)))
             {
                 if (bulletCount < MAX_BULLETS && bullettimer > 15)
                 {
@@ -261,19 +264,8 @@ void StartGame()
                     lasersound.play();
                 }
 
-                mousePressed = true;
-                spacePressed = true;
-
-
             }
-            if (!Mouse::isButtonPressed(Mouse::Button::Left))
-            {
-                mousePressed = false;
-            }
-            if (!Keyboard::isKeyPressed(Keyboard::Key::Space))
-            {
-                spacePressed = false;
-            }
+            
             for (int i = 0; i < bulletCount; )
             {
                 bulletPos[i].y -= 500 * timeSinceLastFrame.asSeconds();
@@ -374,8 +366,8 @@ void StartGame()
             }
             if (enemy2Destroyed == true)
             {
-                score += 15;
-                scoreText.setString("Score: " + to_string(highScore));
+                score += 20;
+                scoreText.setString("Score: " + to_string(score));
             }
 
 

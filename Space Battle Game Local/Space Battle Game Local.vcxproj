@@ -146,11 +146,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="code.cpp" />
+    <ClCompile Include="highscore.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="sfml.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="highscore.h" />
     <ClInclude Include="MainMenu.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="highscore.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

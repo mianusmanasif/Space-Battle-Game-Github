@@ -5,7 +5,7 @@
 using namespace sf;
 using namespace std;
 
-#define Max_main_menu 4
+#define Max_main_menu 3
 
 extern int MainMenuSelected;
 extern Font font;
