@@ -108,21 +108,6 @@ void MoveDown() {
         mainMenu[MainMenuSelected].setFillColor(Color::Blue);
     }
 }
-void GameOverMoveUp() {
-    if (GameOverOptionsSelected > 0) {
-        GameOverOptions[GameOverOptionsSelected].setFillColor(Color::White);
-        GameOverOptionsSelected--;
-        GameOverOptions[GameOverOptionsSelected].setFillColor(Color::Blue);
-    }
-}
-
-void GameOverMoveDown() {
-    if (GameOverOptionsSelected < 1) {
-        GameOverOptions[GameOverOptionsSelected].setFillColor(Color::White);
-        GameOverOptionsSelected++;
-        GameOverOptions[GameOverOptionsSelected].setFillColor(Color::Blue);
-    }
-}
 
 //Mouse hover
 void updateMousePosition(Vector2f mousePos) {
